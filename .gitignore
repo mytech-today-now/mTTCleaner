@@ -1,0 +1,31 @@
+# mTTCleaner .gitignore
+
+# Logs
+*.log
+*.md.bak
+*.log.bak
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# User-specific files
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Icon cache
+mytech.ico
+
+# Backup files
+*.backup
+*.bak
+
+# PowerShell transcript files
+*_transcript_*.log
+
+# Test files
+test_*.ps1
+*_test.ps1
+
