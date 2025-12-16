@@ -29,3 +29,5 @@ mytech.ico
 test_*.ps1
 *_test.ps1
 
+# Other Files
+/other-files/
