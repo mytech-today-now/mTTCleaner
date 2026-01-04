@@ -76,7 +76,7 @@ All myTech.Today scripts **MUST** use standardized paths resolved at runtime.
 |-----------|---------|---------|
 | `data\` | Database files, persistent state | `devices.db`, `sites.db` |
 | `config\` | Configuration files | `settings.json` |
-| `logs\` | Log files | `RMM.log`, `RMM-20241214-120000.log` |
+| `logs\` | Log files | `<Title>.md`, `<Title>.20241214.md` |
 
 ### Logs (Alternative Platform-Native Paths)
 | Platform | System-Wide | Per-User Fallback |
@@ -147,7 +147,7 @@ All scripts **MUST** log using cross-platform paths (see table above).
 
 **Logging Functions:** `Write-LogInfo`, `Write-LogWarning`, `Write-LogError`, `Write-LogSuccess`, `Write-LogDebug`
 
-**Log File Naming:** Current: `<script>.log`, Archived: `<script>-YYYYMMDD-HHMMSS.log`
+**Log File Naming:** Current: `<script>.md`, Archived: `<script>.YYYYMMDD.md`
 
 ---
 
@@ -581,7 +581,7 @@ $config.CodeCoverage.OutputPath = ".\coverage.xml"
 Invoke-Pester -Configuration $config
 ```
 
-**Target: 80%+ code coverage**
+**Target: 85%+ code coverage**
 
 ---
 
@@ -1408,6 +1408,8 @@ Describe "Database Integration Tests" -Tag "Integration" {
 #Requires -Version 5.1
 
 <#
+.TITLE
+    MyModuleFancyName
 .SYNOPSIS
     Build and package the module for deployment.
 .DESCRIPTION

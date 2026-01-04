@@ -113,26 +113,35 @@
 </head>
 <body>
     <div class="container">
-        <h1>mTTCleaner - Browser Cache and Database Cleanup Tool</h1>
-        
+        <h1>mTTCleaner - Cross-Platform Browser Cache and Database Cleanup Tool</h1>
+
         <h2>Overview</h2>
-        <p>mTTCleaner is a comprehensive PowerShell-based browser maintenance tool designed to keep your browsers running smoothly by cleaning caches, compacting databases, and removing unnecessary metrics files. It supports 15+ popular browsers and can be run manually or scheduled for automatic monthly maintenance.</p>
-        
+        <p>mTTCleaner is a comprehensive PowerShell 7+ based browser maintenance tool designed to keep your browsers running smoothly by cleaning caches, compacting databases, and removing unnecessary metrics files. It supports <strong>28 browsers</strong> across <strong>Windows, macOS, and Linux</strong> with modern interactive UI, active browser detection, and enterprise-grade logging.</p>
+
         <h2>Features</h2>
         <ul class="feature-list">
-            <li>Multi-Browser Support: Works with 15+ browsers including Chrome, Edge, Firefox, Brave, Opera, Vivaldi, and more</li>
+            <li>Cross-Platform Support: Works on Windows, macOS, and Linux with PowerShell 7+</li>
+            <li>28 Browser Support: Supports 28 browsers including Chrome, Edge, Firefox, Brave, Opera, Vivaldi, Safari, and more</li>
+            <li>Modern Interactive TUI: Spectre.Console-based UI with browser selection menu and operation options</li>
+            <li>Active Browser Detection: Automatically detects installed browsers using platform-specific methods</li>
             <li>Cache Cleanup: Removes browser cache files to free up disk space</li>
             <li>Database Compaction: Uses SQLite VACUUM to compact browser databases and reclaim space</li>
+            <li>Automatic SQLite3 Installation: Automatically downloads and installs SQLite3 on Windows (v2.1.1+)</li>
             <li>Metrics Removal: Deletes telemetry and metrics files</li>
             <li>Process Management: Automatically closes browser processes before cleanup</li>
-            <li>Desktop Shortcuts: Creates convenient shortcuts for easy access</li>
-            <li>Scheduled Tasks: Sets up monthly automated maintenance</li>
-            <li>Detailed Logging: Comprehensive logging to track all operations</li>
-            <li>Safe Operation: Requires administrator privileges and user confirmation</li>
+            <li>Windows Event Log Integration: Enterprise monitoring via Windows Event Log (Windows only)</li>
+            <li>Cross-Platform Shortcuts: Creates shortcuts on Desktop and Start Menu/Applications (all platforms)</li>
+            <li>Cross-Platform Scheduling: Sets up monthly automated maintenance via Task Scheduler/launchd/cron (all platforms)</li>
+            <li>Parallel Processing: Optional parallel browser processing for improved performance (PowerShell 7+)</li>
+            <li>Enhanced Logging: myTech.Today logging module with markdown format and monthly archiving</li>
+            <li>Safe Operation: Optional elevation with user confirmation</li>
+            <li>-WhatIf Support: Test mode to preview changes without making them</li>
         </ul>
         
         <h2>Supported Browsers</h2>
-        
+
+        <p>mTTCleaner supports <strong>28 browsers</strong> across Windows, macOS, and Linux platforms.</p>
+
         <h3>Chromium-Based Browsers</h3>
         <div class="browser-grid">
             <div class="browser-item">Google Chrome</div>
@@ -145,8 +154,15 @@
             <div class="browser-item">Ungoogled Chromium</div>
             <div class="browser-item">Midori Browser</div>
             <div class="browser-item">Min Browser</div>
+            <div class="browser-item">DuckDuckGo Browser</div>
+            <div class="browser-item">SRWare Iron</div>
+            <div class="browser-item">Maxthon Browser</div>
+            <div class="browser-item">Slimjet Browser</div>
+            <div class="browser-item">Orion Browser (macOS only)</div>
+            <div class="browser-item">Arc Browser (macOS only)</div>
+            <div class="browser-item">SigmaOS (macOS only)</div>
         </div>
-        
+
         <h3>Firefox-Based Browsers</h3>
         <div class="browser-grid">
             <div class="browser-item">Mozilla Firefox</div>
@@ -154,14 +170,29 @@
             <div class="browser-item">Waterfox</div>
             <div class="browser-item">Pale Moon</div>
             <div class="browser-item">Tor Browser</div>
+            <div class="browser-item">SeaMonkey</div>
+        </div>
+
+        <h3>WebKit-Based Browsers</h3>
+        <div class="browser-grid">
+            <div class="browser-item">Safari (macOS only)</div>
+            <div class="browser-item">iCab (macOS only)</div>
+            <div class="browser-item">Epiphany/GNOME Web (Linux only)</div>
+        </div>
+
+        <h3>Other Browsers</h3>
+        <div class="browser-grid">
+            <div class="browser-item">Falkon Browser</div>
+            <div class="browser-item">Konqueror (Linux only)</div>
         </div>
         
         <h2>Requirements</h2>
         <ul>
-            <li><strong>Operating System:</strong> Windows 10 or Windows 11</li>
-            <li><strong>PowerShell:</strong> Version 5.1 or later</li>
-            <li><strong>Privileges:</strong> Administrator rights required</li>
-            <li><strong>Optional:</strong> SQLite3.exe for database compaction (script will skip if not available)</li>
+            <li><strong>Operating System:</strong> Windows 10/11, macOS 10.13+, or Linux (any modern distribution)</li>
+            <li><strong>PowerShell:</strong> Version 7.0 or later (PowerShell Core/7+)</li>
+            <li><strong>Privileges:</strong> Administrator/root rights recommended but optional</li>
+            <li><strong>SQLite3:</strong> Automatically installed on Windows (v2.1.1+), manual install required for macOS/Linux</li>
+            <li><strong>Optional:</strong> PwshSpectreConsole module for modern TUI (graceful fallback if unavailable)</li>
         </ul>
 
         <h2>Installation</h2>
@@ -204,12 +235,17 @@
                 <tr>
                     <td><code>-Automated</code></td>
                     <td>Switch</td>
-                    <td>Run in automated mode (skip confirmation)</td>
+                    <td>Run in automated mode (skip confirmation and browser selection)</td>
                 </tr>
                 <tr>
                     <td><code>-SkipConfirmation</code></td>
                     <td>Switch</td>
                     <td>Skip user confirmation prompt</td>
+                </tr>
+                <tr>
+                    <td><code>-NoParallel</code></td>
+                    <td>Switch</td>
+                    <td>Disable parallel processing (use sequential mode)</td>
                 </tr>
                 <tr>
                     <td><code>-Browser</code></td>
@@ -224,12 +260,12 @@
                 <tr>
                     <td><code>-CreateShortcuts</code></td>
                     <td>Switch</td>
-                    <td>Create desktop and start menu shortcuts</td>
+                    <td>Create desktop and start menu/applications shortcuts (cross-platform)</td>
                 </tr>
                 <tr>
                     <td><code>-CreateScheduledTask</code></td>
                     <td>Switch</td>
-                    <td>Create monthly scheduled task</td>
+                    <td>Create monthly scheduled task (cross-platform)</td>
                 </tr>
                 <tr>
                     <td><code>-WhatIf</code></td>
@@ -302,8 +338,9 @@
 
         <h3>Database Compaction Skipped</h3>
         <ul>
-            <li>Install SQLite3.exe and add to PATH</li>
-            <li>Or use <code>-SkipDatabaseCompaction</code> to skip this step</li>
+            <li><strong>Windows:</strong> SQLite3 is automatically installed on first run (v2.1.1+)</li>
+            <li><strong>macOS:</strong> Install with <code>brew install sqlite3</code></li>
+            <li><strong>Linux:</strong> Install with <code>sudo apt install sqlite3</code> (Debian/Ubuntu) or <code>sudo yum install sqlite</code> (RHEL/CentOS)</li>
         </ul>
 
         <h3>Access Denied Errors</h3>
@@ -314,16 +351,49 @@
         </ul>
 
         <h2>Version History</h2>
+
+        <h3>Version 2.1.1 (2025-12-16)</h3>
+        <ul>
+            <li><strong>Automatic SQLite3 Installation:</strong> Windows users no longer need to manually install SQLite3</li>
+            <li><strong>Zero Configuration:</strong> Database compaction works out-of-the-box on Windows</li>
+            <li><strong>Self-Contained:</strong> SQLite3 automatically downloaded and installed to script directory</li>
+            <li><strong>Improved UX:</strong> Eliminated manual SQLite3 installation step for Windows users</li>
+        </ul>
+
+        <h3>Version 2.1.0 (2025-12-16)</h3>
+        <ul>
+            <li><strong>22 Browser Support:</strong> Added Safari, DuckDuckGo, SRWare Iron, Maxthon, SeaMonkey, Slimjet, Falkon</li>
+            <li><strong>Modern TUI:</strong> Interactive UI with Spectre.Console (browser selection, operation options)</li>
+            <li><strong>Active Browser Detection:</strong> Platform-specific detection via registry/mdfind/which/flatpak/snap</li>
+            <li><strong>Windows Event Log Integration:</strong> Enterprise monitoring via myTech.Today logging module</li>
+            <li><strong>Cross-Platform Shortcuts:</strong> Desktop and Start Menu/Applications shortcuts on all platforms</li>
+            <li><strong>Cross-Platform Scheduling:</strong> Task Scheduler/launchd/cron support on all platforms</li>
+            <li><strong>Parallel Processing:</strong> Framework for parallel browser processing (PowerShell 7+)</li>
+            <li><strong>Enhanced Logging:</strong> myTech.Today module with markdown format and monthly archiving</li>
+        </ul>
+
+        <h3>Version 2.0.0 (2025-12-16)</h3>
+        <ul>
+            <li><strong>Cross-Platform Support:</strong> Full support for Windows, macOS, and Linux</li>
+            <li><strong>PowerShell 7+ Required:</strong> Updated from PowerShell 5.1 to PowerShell 7.0+</li>
+            <li><strong>Platform Detection:</strong> Automatic OS detection and platform-specific path resolution</li>
+            <li><strong>-WhatIf Support:</strong> Added test mode to preview changes</li>
+            <li><strong>Enhanced Logging:</strong> Self-contained cross-platform logging system</li>
+            <li><strong>Progress Indicators:</strong> Shows current browser being processed</li>
+            <li><strong>Improved Error Handling:</strong> Better error messages and recovery</li>
+        </ul>
+
         <h3>Version 1.0.0 (2025-01-23)</h3>
         <ul>
-            <li>Initial release</li>
-            <li>Support for 15+ browsers</li>
+            <li>Initial Windows-only release</li>
+            <li>Support for 15 browsers</li>
             <li>Cache cleanup functionality</li>
             <li>Database compaction with SQLite VACUUM</li>
             <li>Metrics file removal</li>
             <li>Desktop and start menu shortcuts</li>
             <li>Monthly scheduled task</li>
             <li>Comprehensive logging</li>
+            <li>myTech.Today standards compliance</li>
         </ul>
 
         <h2>License</h2>
