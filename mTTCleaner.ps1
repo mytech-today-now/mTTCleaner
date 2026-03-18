@@ -68,9 +68,9 @@
 .NOTES
     File Name      : mTTCleaner.ps1
     Author         : Kyle C. Rode / myTech.Today
-    Version        : 2.2.0
+    Version        : 2.2.1
     DateCreated    : 2025-01-23
-    LastModified   : 2025-12-17
+    LastModified   : 2026-03-18
     Copyright      : (c) 2025 myTech.Today. All rights reserved.
     Requires       : PowerShell 7.0 or later for full cross-platform support
     Platform       : Windows, macOS, Linux
@@ -312,7 +312,7 @@ $script:OriginalProgressPreference = $ProgressPreference
 $ProgressPreference = 'SilentlyContinue'
 
 # Script constants
-$script:ScriptVersion = '2.1.1'  # Added automatic SQLite3 installation for Windows
+$script:ScriptVersion = '2.2.1'  # Auto-configure UTF-8 encoding in PowerShell profile during install
 $script:ScriptName = 'mTTCleaner'
 $script:InstallPath = Get-PlatformPath -PathType InstallDir
 $script:LogPath = Get-PlatformPath -PathType LogDir
@@ -676,6 +676,39 @@ if (-not $isInstalled) {
         }
     }
     
+    # Ensure UTF-8 encoding is configured in PowerShell profile (prevents Spectre Console warning)
+    $utf8Line = '$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()'
+    $profilePath = $PROFILE.CurrentUserAllHosts
+    try {
+        $profileDir = Split-Path -Parent $profilePath
+        if (-not (Test-Path $profileDir)) {
+            New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+            Write-Log "Created PowerShell profile directory: $profileDir" -Level INFO
+        }
+        if (-not (Test-Path $profilePath)) {
+            # Profile doesn't exist - create it with the UTF-8 line
+            Set-Content -Path $profilePath -Value $utf8Line -Force
+            Write-Log "Created PowerShell profile with UTF-8 encoding: $profilePath" -Level INFO
+        }
+        else {
+            $profileContent = Get-Content -Path $profilePath -Raw -ErrorAction SilentlyContinue
+            if ($profileContent -notmatch 'OutputEncoding.*UTF8Encoding') {
+                # Prepend the UTF-8 line to existing profile
+                $newContent = $utf8Line + [Environment]::NewLine + $profileContent
+                Set-Content -Path $profilePath -Value $newContent -Force
+                Write-Log "Added UTF-8 encoding to PowerShell profile: $profilePath" -Level INFO
+            }
+            else {
+                Write-Log "UTF-8 encoding already configured in PowerShell profile" -Level INFO
+            }
+        }
+        # Apply UTF-8 encoding to current session so the re-launched script benefits immediately
+        $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+    }
+    catch {
+        Write-Log "Could not configure UTF-8 encoding in profile: $_" -Level WARN
+    }
+
     # Re-launch from install location (only if not in WhatIf mode)
     $installedScript = Join-Path $script:InstallPath 'mTTCleaner.ps1'
 

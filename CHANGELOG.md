@@ -2,6 +2,21 @@
 
 All notable changes to mTTCleaner will be documented in this file.
 
+## [2.2.1] - 2026-03-18
+
+### Added
+
+- **Automatic UTF-8 Profile Configuration**: During first-run deployment, the installer now automatically configures UTF-8 encoding in the user's PowerShell profile (`$PROFILE.CurrentUserAllHosts`)
+  - Creates the profile directory and file if they don't exist
+  - Prepends the UTF-8 encoding line if not already present
+  - Applies UTF-8 encoding to the current session for immediate effect
+  - Eliminates the PwshSpectreConsole encoding warning on fresh installs
+  - Wrapped in try/catch so failures don't block installation
+
+### Fixed
+
+- **Version Constant**: Fixed `$script:ScriptVersion` which was stuck at `2.1.1` instead of matching the release version
+
 ## [2.2.0] - 2025-12-17
 
 ### Added
