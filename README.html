@@ -197,6 +197,10 @@
 
         <h2>Installation</h2>
 
+        <h3>Set Execution Policy</h3>
+        <p>Before running the script for the first time, set the execution policy to allow scripts to run:</p>
+        <pre><code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted</code></pre>
+
         <h3>Quick Install</h3>
         <p>The script will automatically install itself on first run:</p>
         <pre><code>.\mTTCleaner.ps1</code></pre>
@@ -333,7 +337,7 @@
         <h3>Script Won't Run</h3>
         <ul>
             <li>Ensure you're running PowerShell as Administrator</li>
-            <li>Check execution policy: <code>Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process</code></li>
+            <li>Check execution policy: <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted</code></li>
         </ul>
 
         <h3>Database Compaction Skipped</h3>

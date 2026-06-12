@@ -131,6 +131,14 @@ sudo yum install sqlite
 sudo pacman -S sqlite
 ```
 
+## Set Execution Policy
+
+Before running the script, set the PowerShell execution policy (one-time setup):
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+```
+
 ## Installation
 
 ### Quick Install (All Platforms)

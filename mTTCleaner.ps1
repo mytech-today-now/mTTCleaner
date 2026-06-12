@@ -46,6 +46,10 @@
     Create monthly scheduled task (cross-platform)
 
 .EXAMPLE
+    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+    Set the execution policy to allow running scripts (run once before first use)
+
+.EXAMPLE
     .\mTTCleaner.ps1
     Run interactive cleanup with browser selection menu
 

@@ -31,3 +31,5 @@ test_*.ps1
 
 # Other Files
 /other-files/
+.augment/
+/ai-promts/
